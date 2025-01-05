@@ -80,38 +80,45 @@ export default function ProfilesScreen() {
             style={styles.profileCard}
             onPress={() => router.push(`/profile/${profile.id}`)}
           >
-            <View style={styles.profileInfo}>
-              {profile.avatar ? (
-                <View style={styles.avatarContainer}>
-                  <profile.avatar width={60} height={60} />
-                </View>
-              ) : (
-                <View style={[styles.avatarContainer, styles.avatarPlaceholder]}>
-                  <Text style={styles.avatarText}>{profile.name[0]}</Text>
-                </View>
-              )}
-              <View style={styles.profileDetails}>
-                <View style={styles.profileHeader}>
-                  <Text style={styles.profileName}>{profile.name}</Text>
-                  <Text style={styles.profileAge}>{profile.age} años</Text>
-                </View>
-                <View style={styles.statsContainer}>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statValue}>
-                      {renderDebugValues(profile.id)}
-                    </Text>
-                    <Text style={styles.statLabel}>Tareas completadas</Text>
-                    <Text style={styles.statPeriod}>últimos 30 días</Text>
+            <View style={styles.profileHeader}>
+              <View style={styles.profileInfo}>
+                {profile.avatar ? (
+                  <View style={styles.avatarContainer}>
+                    <profile.avatar width={60} height={60} />
                   </View>
-                  <View style={styles.statDivider} />
-                  <View style={styles.statItem}>
-                    <Text style={styles.statValue}>
-                      {Math.round(profile.screenTimeUsed / 60)}h/{Math.round(profile.screenTimeLimit / 60)}h
-                    </Text>
-                    <Text style={styles.statLabel}>Tiempo de pantalla</Text>
-                    <Text style={styles.statPeriod}>hoy</Text>
+                ) : (
+                  <View style={[styles.avatarContainer, styles.avatarPlaceholder]}>
+                    <Text style={styles.avatarText}>{profile.name[0]}</Text>
                   </View>
+                )}
+                <View style={styles.profileDetails}>
+                  <View style={styles.nameRow}>
+                    <Text style={styles.profileName}>{profile.name}</Text>
+                    <Text style={styles.profileAge}>{profile.age} años</Text>
+                  </View>
+                  <Text style={styles.timeLimit}>
+                    Tiempo diario: {Math.round(profile.screenTimeLimit / 60)}h
+                  </Text>
                 </View>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.statsGrid}>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>
+                  {renderDebugValues(profile.id)}
+                </Text>
+                <Text style={styles.statLabel}>Tareas completadas</Text>
+                <Text style={styles.statPeriod}>últimos 30 días</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statValue}>
+                  {Math.round(profile.screenTimeUsed / 60)}h/{Math.round(profile.screenTimeLimit / 60)}h
+                </Text>
+                <Text style={styles.statLabel}>Tiempo de pantalla</Text>
+                <Text style={styles.statPeriod}>hoy</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -153,9 +160,22 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  profileHeader: {
+    marginBottom: 16,
+  },
   profileInfo: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#eee',
+    marginBottom: 16,
   },
   avatarContainer: {
     width: 60,
@@ -192,21 +212,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  statsContainer: {
+  timeLimit: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 12,
+  },
+  statsGrid: {
     flexDirection: 'row',
-    marginTop: 12,
+    flexWrap: 'wrap',
+    gap: 8,
+    justifyContent: 'space-between',
+  },
+  statCard: {
     backgroundColor: '#f5f5f5',
     borderRadius: 12,
     padding: 12,
-  },
-  statItem: {
-    flex: 1,
+    width: '48%',
     alignItems: 'center',
-  },
-  statDivider: {
-    width: 1,
-    backgroundColor: '#ddd',
-    marginHorizontal: 12,
   },
   statValue: {
     fontSize: 16,
@@ -217,16 +239,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginTop: 4,
+    textAlign: 'center',
   },
   statPeriod: {
     fontSize: 10,
     color: '#999',
     marginTop: 2,
-  },
-  profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
+    textAlign: 'center',
   },
   profileAge: {
     fontSize: 14,
