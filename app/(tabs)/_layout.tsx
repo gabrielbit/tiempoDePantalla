@@ -1,7 +1,29 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TabsLayout() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      router.replace('/login');
+      return;
+    }
+    setIsAuthenticated(true);
+  };
+
+  if (!isAuthenticated) {
+    return null; // o un loading spinner mientras verifica
+  }
+
   return (
     <Tabs
       screenOptions={{
