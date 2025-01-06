@@ -1,1 +1,2 @@
-export { default } from '../../src/screens/ScheduleManagementScreen'; 
+import SchedulesScreen from '../../src/screens/SchedulesScreen';
+export default SchedulesScreen; 

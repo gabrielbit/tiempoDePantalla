@@ -13,6 +13,15 @@ export default function RootLayout() {
           }} 
         />
         <Stack.Screen 
+          name="create-schedule"
+          options={{
+            presentation: 'modal',
+            headerShown: true,
+            title: 'Crear Horario',
+            headerTintColor: '#009D96',
+          }}
+        />
+        <Stack.Screen 
           name="profile/[id]" 
           options={{ 
             presentation: 'modal',

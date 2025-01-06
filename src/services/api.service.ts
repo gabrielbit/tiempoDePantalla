@@ -3,8 +3,11 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Configurar la URL base según la plataforma
-const API_URL = 'http://localhost:3000';
+const API_URL = Platform.OS === 'android' 
+  ? 'http://10.0.2.2:3000'  // Para Android emulator
+  : 'http://localhost:3000'; // Para iOS
 
+console.log('Platform:', Platform.OS);
 console.log('Using API URL:', API_URL);
 
 const api = axios.create({
@@ -78,15 +81,46 @@ export const authService = {
 };
 
 export const schedulesService = {
-  getAll: () => api.get('/schedules'),
+  getAll: async () => {
+    try {
+      console.log('Fetching schedules...');
+      const response = await api.get('/schedules');
+      console.log('Raw API response:', response);
+      // Importante: devolver solo response.data, no todo el response
+      return { data: response.data };
+    } catch (error) {
+      console.error('Error fetching schedules:', error);
+      throw error;
+    }
+  },
   getOne: (id: string) => api.get(`/schedules/${id}`),
   getByChild: (childId: string) => api.get(`/schedules/child/${childId}`),
   create: (data: any) => api.post('/schedules', data),
 };
 
 export const tasksService = {
-  getAll: () => api.get('/tasks'),
+  getAll: async () => {
+    try {
+      const response = await api.get('/tasks');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      throw error;
+    }
+  },
   getOne: (id: string) => api.get(`/tasks/${id}`),
   getBySchedule: (scheduleId: string) => api.get(`/tasks/schedule/${scheduleId}`),
   create: (data: any) => api.post('/tasks', data),
+};
+
+export const childrenService = {
+  getAll: async () => {
+    try {
+      const response = await api.get('/children');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching children:', error);
+      throw error;
+    }
+  }
 }; 

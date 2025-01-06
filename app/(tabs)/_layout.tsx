@@ -54,7 +54,7 @@ export default function TabsLayout() {
         options={{
           title: 'Horarios',
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="clock" size={20} color={color} />
+            <FontAwesome5 name="calendar-alt" size={20} color={color} />
           ),
         }}
       />
