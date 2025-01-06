@@ -126,10 +126,34 @@ export const tasksService = {
 export const childrenService = {
   getAll: async () => {
     try {
+      console.log('🚀 Fetching children...');
+      const token = await AsyncStorage.getItem('token');
+      console.log('Using token:', token ? 'Yes' : 'No');
+      
       const response = await api.get('/children');
+      console.log('✅ Children response:', response.data);
       return response.data;
-    } catch (error) {
-      console.error('Error fetching children:', error);
+    } catch (error: any) {
+      console.error('❌ Error fetching children:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      throw error;
+    }
+  },
+  create: async (data: any) => {
+    try {
+      console.log('🚀 Creating child with data:', data);
+      const response = await api.post('/children', data);
+      console.log('✅ Child created:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('❌ Error creating child:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       throw error;
     }
   }

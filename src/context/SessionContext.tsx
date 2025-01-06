@@ -20,6 +20,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     const init = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
+        console.log('Session check - Token:', token ? 'Present' : 'Not found');
         setIsAuthenticated(!!token);
       } catch (error) {
         console.error('Error checking auth:', error);
