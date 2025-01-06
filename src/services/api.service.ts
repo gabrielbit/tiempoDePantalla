@@ -3,16 +3,26 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Configurar la URL base según la plataforma
-const API_URL = Platform.OS === 'android' 
-  ? 'http://10.0.2.2:3000'  // Para Android emulator
-  : 'http://localhost:3000'; // Para iOS
+const API_PORT = '3000'; // Asegurarnos de usar el puerto correcto
+const DEV_API_URL = `http://localhost:${API_PORT}`;
 
+const API_URL = Platform.select({
+  ios: DEV_API_URL,
+  android: DEV_API_URL.replace('localhost', '10.0.2.2'),
+  default: DEV_API_URL,
+});
+
+// Debug logs
+console.log('Environment:', __DEV__ ? 'Development' : 'Production');
 console.log('Platform:', Platform.OS);
 console.log('Using API URL:', API_URL);
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000, // Timeout de 10 segundos
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
 });
 
 // Interceptor para las requests

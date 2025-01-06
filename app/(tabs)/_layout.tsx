@@ -1,34 +1,49 @@
-import { Tabs, useRouter } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native';
+import { useSession } from '../../src/context/SessionContext';
+import { useRouter } from 'expo-router';
 
 export default function TabsLayout() {
+  const { logout } = useSession();
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const token = await AsyncStorage.getItem('token');
-    if (!token) {
-      router.replace('/login');
-      return;
-    }
-    setIsAuthenticated(true);
-  };
-
-  if (!isAuthenticated) {
-    return null; // o un loading spinner mientras verifica
-  }
+  const headerRight = (screen: string) => () => (
+    <>
+      <TouchableOpacity 
+        onPress={() => router.push(`/create-${screen}`)}
+        style={{ marginRight: 15 }}
+      >
+        <FontAwesome5 
+          name="plus" 
+          size={20} 
+          color="#009D96" 
+        />
+      </TouchableOpacity>
+      {screen === 'schedules' && (
+        <TouchableOpacity 
+          onPress={logout}
+          style={{ marginRight: 15 }}
+        >
+          <FontAwesome5 
+            name="sign-out-alt" 
+            size={20} 
+            color="#009D96" 
+          />
+        </TouchableOpacity>
+      )}
+    </>
+  );
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#009D96',
-        headerShown: false,
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: '#fff',
+        },
+        headerTintColor: '#009D96',
       }}
     >
       <Tabs.Screen
@@ -44,6 +59,8 @@ export default function TabsLayout() {
         name="profiles"
         options={{
           title: 'Perfiles',
+          headerTitle: 'Perfiles',
+          headerRight: headerRight('profile'),
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="users" size={20} color={color} />
           ),
@@ -53,6 +70,8 @@ export default function TabsLayout() {
         name="schedules"
         options={{
           title: 'Horarios',
+          headerTitle: 'Horarios',
+          headerRight: headerRight('schedules'),
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="calendar-alt" size={20} color={color} />
           ),
@@ -62,6 +81,8 @@ export default function TabsLayout() {
         name="tasks"
         options={{
           title: 'Tareas',
+          headerTitle: 'Tareas',
+          headerRight: headerRight('tasks'),
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="tasks" size={20} color={color} />
           ),

@@ -4,6 +4,8 @@ import { schedulesService } from '../services/api.service';
 import { Schedule } from '../types';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { TaskIcon } from '../components/TaskIcon';
+import { TaskIconType } from '../constants/icons';
 
 export default function SchedulesScreen() {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -36,23 +38,33 @@ export default function SchedulesScreen() {
     <TouchableOpacity style={styles.scheduleCard}>
       <Text style={styles.scheduleName}>{item.name}</Text>
       <View style={styles.scheduleDetails}>
-        <Text>Horario: {item.startTime} - {item.endTime}</Text>
-        <Text>Duración: {item.recommendedDuration} minutos</Text>
-        <Text>Estado: {item.isActive ? 'Activo' : 'Inactivo'}</Text>
+        <Text style={styles.scheduleText}>Horario: {item.startTime} - {item.endTime}</Text>
+        <Text style={styles.scheduleText}>Duración: {item.recommendedDuration} minutos</Text>
+        <Text style={[
+          styles.scheduleText, 
+          { color: item.isActive ? '#4CAF50' : '#999' }
+        ]}>
+          Estado: {item.isActive ? '● Activo' : '○ Inactivo'}
+        </Text>
       </View>
       <View style={styles.tasksList}>
         <Text style={styles.tasksTitle}>Tareas:</Text>
         {item.tasks?.map(taskRelation => (
-          <Text key={taskRelation.taskId} style={styles.taskItem}>
-            {taskRelation.task.icon} {taskRelation.task.name}
-          </Text>
+          <View key={taskRelation.taskId} style={styles.taskRow}>
+            <TaskIcon 
+              iconType={taskRelation.task.icon as TaskIconType} 
+              size={18} 
+              color="#444"
+            />
+            <Text style={styles.taskItem}> {taskRelation.task.name}</Text>
+          </View>
         ))}
       </View>
       <View style={styles.childrenList}>
         <Text style={styles.childrenTitle}>Asignado a:</Text>
         {item.children?.map(childRelation => (
           <Text key={childRelation.childId} style={styles.childItem}>
-            • {childRelation.child.name}
+            👤 {childRelation.child.name}
           </Text>
         ))}
       </View>
@@ -113,34 +125,48 @@ const styles = StyleSheet.create({
   },
   scheduleCard: {
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    elevation: 2,
+    elevation: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
   },
   scheduleName: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 12,
     color: '#009D96',
   },
   scheduleDetails: {
-    marginBottom: 12,
+    marginBottom: 16,
+    backgroundColor: '#f8f8f8',
+    padding: 12,
+    borderRadius: 8,
   },
-  tasksList: {
-    marginTop: 8,
-  },
-  tasksTitle: {
-    fontWeight: 'bold',
+  scheduleText: {
+    fontSize: 15,
+    color: '#444',
     marginBottom: 4,
   },
+  tasksList: {
+    marginTop: 12,
+  },
+  tasksTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333',
+  },
   taskItem: {
+    fontSize: 15,
     marginLeft: 8,
-    marginBottom: 2,
+    marginBottom: 6,
+    color: '#444',
   },
   error: {
     color: 'red',
@@ -174,18 +200,27 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   childrenList: {
-    marginTop: 8,
+    marginTop: 12,
     borderTopWidth: 1,
     borderTopColor: '#eee',
-    paddingTop: 8,
+    paddingTop: 12,
   },
   childrenTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 8,
+    color: '#333',
   },
   childItem: {
+    fontSize: 15,
     marginLeft: 8,
-    marginBottom: 2,
-    color: '#666',
+    marginBottom: 4,
+    color: '#444',
+  },
+  taskRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+    marginLeft: 8,
   },
 }); 

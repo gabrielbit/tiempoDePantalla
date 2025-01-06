@@ -1,3 +1,5 @@
+import { TaskIconType } from '../constants/icons';
+
 export interface Schedule {
   id: string;
   name: string;
@@ -12,7 +14,7 @@ export interface Schedule {
       id: string;
       name: string;
       description: string;
-      icon: string;
+      icon: TaskIconType;
       isRequired: boolean;
     }
   }[];
